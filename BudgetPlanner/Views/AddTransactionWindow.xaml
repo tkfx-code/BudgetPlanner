@@ -1,0 +1,47 @@
+﻿<Window x:Class="BudgetPlanner.Views.AddTransactionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BudgetPlanner.Views"
+        mc:Ignorable="d"
+        Title="AddTransactionWindow" Height="450" Width="400">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="Amount:" FontWeight="Bold"/>
+            <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}, ValidatesOnExceptions=True}" />
+
+            <TextBlock Text="Date:" FontWeight="Bold" Margin="3 10 3 0"/>
+            <DatePicker SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+
+            <TextBlock Text="Category:" FontWeight="Bold" Margin="3 10 3 0"/>
+            <ComboBox ItemsSource="{Binding CategoryOptions}" SelectedItem="{Binding SelectedCategoryName}" Margin="0 5 0 0" />
+
+            <TextBlock Text="Income?" FontWeight="Bold" Margin="3 10 3 0"/>
+            <TextBlock Text="Leave unchecked if expense" FontStyle="Italic" FontSize="10"  />
+            <CheckBox IsChecked="{Binding IsIncome, ValidatesOnExceptions=True}" Margin="3 4 3 10" />
+
+            <TextBlock Text="Description:" FontWeight="Bold" Margin="3 10 3 0"/>
+            <TextBlock Text="Optional" FontStyle="Italic" FontSize="10"  />
+            <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=True}" />
+
+            <TextBlock Text="Frequency:" FontWeight="Bold" Margin="3 10 3 0"/>
+            <RadioButton Content="One Time"
+                         IsChecked="{Binding IsOneTime}"
+                         Margin="0 0 10 0" FontStyle="Italic" FontSize="11"/>
+            <RadioButton Content="Monthly"
+                         IsChecked="{Binding IsMonthly}"
+                         Margin="0 0 10 0" FontStyle="Italic" FontSize="11"/>
+            <RadioButton Content="Yearly"
+                         IsChecked="{Binding IsYearly}"
+                         Margin="0 0 10 0" FontStyle="Italic" FontSize="11"/>
+            <Button Margin="3 30 3 0"
+                    Content="Add Transaction" 
+                    FontSize="12" FontWeight="Bold"
+                    Command="{Binding SaveCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    HorizontalAlignment="Center"
+                    Width="150"/>
+        </StackPanel>
+    </Grid>
+</Window>
