@@ -3,6 +3,7 @@ using BudgetPlanner.Models;
 using System.Collections.ObjectModel;
 using BudgetPlanner.Repositories;
 using System.Linq;
+using System.Windows;
 
 namespace BudgetPlanner.ViewModels
 {
@@ -17,6 +18,7 @@ namespace BudgetPlanner.ViewModels
         };
 
         public RelayCommand AddTransactionCommand { get; }
+        public RelayCommand DeleteTransactionCommand { get; }
         public List<string> PrognosisYears { get; } = new List<string>();
 
         private string _selectedPrognosisMonth;
@@ -57,6 +59,7 @@ namespace BudgetPlanner.ViewModels
 
             Transactions = new ObservableCollection<DatabaseTransaction>();
             AddTransactionCommand = new RelayCommand(x => ExecuteOpenAddWindow());
+            DeleteTransactionCommand = new RelayCommand(x => ExecuteDeleteTransaction(x));
             ClearDateCommand = new RelayCommand(x => SelectedDate = null);
 
             SelectedPrognosisYear = DateTime.Now.Year.ToString();
@@ -95,6 +98,48 @@ namespace BudgetPlanner.ViewModels
         public async Task AddTransaction(object? parameter)
         {
 
+        }
+
+        private void ExecuteDeleteTransaction(object? parameter)
+        {
+            if (parameter is DatabaseTransaction transaction)
+            {
+                //Pop up for confirmation
+                var result = MessageBox.Show(
+                    $"Are you sure you want to delete this: {transaction.Description}?", 
+                    "Confirm Delete",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    _budgetRepo.Deletetransaction(transaction.Id);
+                    Transactions.Remove(transaction);
+                    UpdateDashboard();
+                    CalculatePrognosis();
+                }
+            }
+        }
+
+        public void SaveEditedTransaction(DatabaseTransaction transaction)
+        {
+            if (transaction!= null)
+            {
+                _budgetRepo.UpdateTransaction(transaction);
+
+                UpdateDashboard();
+                CalculatePrognosis();
+            }
+        }
+
+        //Call when cell change is done in DataGrid
+        public void OnTransactionEdited(DatabaseTransaction transaction)
+        {
+            if (transaction != null)
+            {
+                _budgetRepo.UpdateTransaction(transaction);
+                UpdateDashboard();
+                CalculatePrognosis();
+            }
         }
 
         private string _filterText;
