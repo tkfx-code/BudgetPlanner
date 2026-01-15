@@ -27,5 +27,27 @@ namespace BudgetPlanner
         {
             await viewModel.LoadAsync();
         }
+
+        public void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            //Wait for the edit to complete before saving
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+                var editedTransaction = e.Row.Item as Models.DatabaseTransaction;
+                if(editedTransaction != null)
+                {
+                    viewModel.OnTransactionEdited(editedTransaction);
+                }
+            }
+        }
+
+        //Marks whole amount when editing
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (sender is TextBox tb)
+            {
+                tb.SelectAll();
+            }
+        }
     }
 }

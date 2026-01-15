@@ -44,12 +44,32 @@
                         </StackPanel>
                     </StackPanel>
 
-                    <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredTransactions}"
-                              AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
-                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#EEEEEE"
-                              Background="White" RowHeight="35">
+                    <DataGrid x:Name="TransactionsGrid" 
+                            Grid.Row="2" 
+                            ItemsSource="{Binding FilteredTransactions}"
+                            AutoGenerateColumns="False" 
+                            CanUserAddRows="False" 
+                            IsReadOnly="False"
+                            CellEditEnding="DataGrid_CellEditEnding"
+                            GridLinesVisibility="Horizontal" 
+                            HorizontalGridLinesBrush="#EEEEEE"
+                            Background="White" 
+                            RowHeight="35">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
+                            <DataGridTemplateColumn Header="Date" Width="120">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}"
+                                        VerticalAlignment="Center" Margin="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <DatePicker SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}" 
+                                                    BorderThickness="0"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>  
                             <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*"/>
                             <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*"/>
 
@@ -103,6 +123,30 @@
                                                 </TextBlock.Style>
                                             </TextBlock>
                                         </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding Amount, UpdateSourceTrigger=LostFocus, StringFormat={}{0:F2}}"
+                                        VerticalContentAlignment="Center"
+                                        HorizontalContentAlignment="Right"
+                                        GotFocus="TextBox_GotFocus"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Delete" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="Delete" 
+                                                Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" 
+                                                BorderBrush="DarkRed" 
+                                                Foreground="DarkRed" 
+                                                FontSize="10" 
+                                                Padding="5,2"
+                                                Cursor="Hand"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
