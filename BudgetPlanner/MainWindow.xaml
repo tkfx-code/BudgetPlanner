@@ -5,144 +5,166 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BudgetPlanner"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Budget Planner Pro" Height="600" Width="900">
+
     <Grid Margin="5">
         <TabControl Background="White">
+
             <TabItem Header="My Budget Planner">
-                <Grid Margin="10">
+                <Grid Margin="15">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel>
-                        <TextBlock Text="My Budget Planner" FontSize="22" Margin="10"/>
-                        <TextBlock Text="Current Net Balance" FontSize="11" Margin="10 5 10 3" FontStyle="Italic"/>
-                        <TextBlock Text="{Binding BalanceDisplay}" Margin="10 0 0 3" Width="150" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="Foreground" Value="DarkRed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPositiveBalance}" Value="True">
-                                            <Setter Property="Foreground" Value="DarkGreen"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
+                    <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                        <TextBlock Text="My Budget Planner" Style="{StaticResource HeaderTitle}"/>
+                        <TextBlock Text="Current Net Balance" FontSize="11" FontStyle="Italic" Margin="5,0,0,0" Foreground="Gray"/>
+                        <TextBlock Text="{Binding BalanceDisplay}" Style="{StaticResource BalanceValue}"/>
+                    </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="10,5">
-                            <TextBlock Text="Filter by Category:" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                            <ComboBox ItemsSource="{Binding CategoryFilters}" Width="150" 
-                                SelectedItem="{Binding SelectedCategoryFilter}" />
-
-                            <TextBlock Text="Date:" VerticalAlignment="Center" Margin="20 0 5 0"/>
-                            <DatePicker SelectedDate="{Binding SelectedDate}" Width="150" VerticalAlignment="Center"/>
-                            <Button Content="✕"
-                                Command="{Binding ClearDateCommand}"
-                                ToolTip="Clear"
-                                Margin="5 0 0 0" Width="20" Height="20"
-                                Background="Transparent" BorderBrush="DarkRed"/>
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10">
+                        <StackPanel Margin="0,0,15,0">
+                            <TextBlock Text="Category" FontSize="10" Foreground="Gray"/>
+                            <ComboBox ItemsSource="{Binding CategoryFilters}" 
+                                      SelectedItem="{Binding SelectedCategoryFilter}" 
+                                      Width="150" Height="30"/>
                         </StackPanel>
 
-                        <DataGrid ItemsSource ="{Binding FilteredTransactions}"
-                            AutoGenerateColumns="False"
-                            CanUserAddRows="False"
-                            IsReadOnly="True"
-                            GridLinesVisibility="Horizontal"
-                            Background="White"
-                            RowBackground="White"
-                            AlternatingRowBackground="AliceBlue"
-                            AlternationCount="2"
-                            BorderBrush="#DDDDDD"
-                            HorizontalGridLinesBrush="#EEEEEE"
-                            Margin="10 10 10 30">
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="Height" Value="30"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
-                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#F0F8FF"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Date"
-                                    Binding="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}"
-                                    Width="100"/>
-                                <DataGridTextColumn Header="Category"
-                                    Binding="{Binding CategoryName}"
-                                    Width="*"/>
-                                <DataGridTextColumn Header="Descriptions"
-                                    Binding="{Binding Description}"
-                                    Width="2*"/>
-                                <DataGridTextColumn Header="Frequency"
-                                    Binding="{Binding Recurrence}"
-                                    Width="100"/>
-                                <DataGridTemplateColumn Header="Amount" Width="120" SortMemberPath="Amount">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                                <TextBlock FontWeight="Bold">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Text" Value="-"/>
-                                                            <Setter Property="Foreground" Value="DarkRed"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsIncome}" Value="True">
-                                                                    <Setter Property="Text" Value="+"/>
-                                                                    <Setter Property="Foreground" Value="DarkGreen"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                                <TextBlock Text="{Binding Amount, StringFormat={}{0:N2} kr}"
-                                                        HorizontalAlignment="Right"
-                                                        FontWeight="Bold">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Setter Property="Foreground" Value="DarkRed"/>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding IsIncome}" Value="True">
-                                                                    <Setter Property="Foreground" Value="DarkGreen"/>
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <Button Content="Add Transaction" 
-            FontSize="14" FontWeight="Bold" Width="150" Height="30" Margin="5"
-            Command="{Binding AddTransactionCommand}"/>
+                        <StackPanel>
+                            <TextBlock Text="Date" FontSize="10" Foreground="Gray"/>
+                            <StackPanel Orientation="Horizontal">
+                                <DatePicker SelectedDate="{Binding SelectedDate}" Width="150" Height="30"/>
+                                <Button Content="✕" Command="{Binding ClearDateCommand}" 
+                                        Margin="5,0" Width="30" Height="30" 
+                                        Background="Transparent" BorderBrush="DarkRed" Foreground="DarkRed"/>
+                            </StackPanel>
+                        </StackPanel>
                     </StackPanel>
+
+                    <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredTransactions}"
+                              AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                              GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#EEEEEE"
+                              Background="White" RowHeight="35">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date" Binding="{Binding Date, StringFormat=\{0:yyyy-MM-dd\}}" Width="100"/>
+                            <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*"/>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*"/>
+
+                            <DataGridTemplateColumn Header="Repeats" Width="100">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Recurrence}" VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Recurrence}" Value="OneTime">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="Amount" Width="130">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock FontWeight="Bold" VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="- "/>
+                                                        <Setter Property="Foreground" Value="DarkRed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsIncome}" Value="True">
+                                                                <Setter Property="Text" Value="+ "/>
+                                                                <Setter Property="Foreground" Value="DarkGreen"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Amount, StringFormat={}{0:N2} kr}" 
+                                                       FontWeight="Bold" VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="DarkRed"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsIncome}" Value="True">
+                                                                <Setter Property="Foreground" Value="DarkGreen"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <Button Grid.Row="3" Content="+ Add Transaction" 
+                            Command="{Binding AddTransactionCommand}" 
+                            Style="{StaticResource PrimaryButton}"
+                            HorizontalAlignment="Left" Width="180" Height="40" Margin="0,15,0,0"/>
                 </Grid>
             </TabItem>
 
             <TabItem Header="Prognosis">
-                <Grid Margin="10">
-                    <StackPanel>
-                        <TextBlock Text="Financial Prognosis" FontSize="22" Margin="0 0 0 10"/>
-                        <StackPanel Orientation="Horizontal" Margin="0 0 0 20">
-                            <TextBlock Text="Select Year: " VerticalAlignment="Center"/>
-                            <ComboBox ItemsSource="{Binding PrognosisYears}"
-                                    SelectedItem="{Binding SelectedPrognosisYear}"
-                                    Width="100" Height="25 " Margin="5 0 0 0"/>
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Financial Outlook" Style="{StaticResource HeaderTitle}"/>
+
+                    <Grid Grid.Row="1" Margin="0,10,0,25">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                            <TextBlock Text="Select Year" FontSize="11" Foreground="Gray" Margin="0,0,0,3"/>
+                            <ComboBox ItemsSource="{Binding PrognosisYears}" 
+                                      SelectedItem="{Binding SelectedPrognosisYear}" 
+                                      Width="120" Height="30"/>
                         </StackPanel>
-                        <TextBlock Text="Est. Year Balance:" Foreground="Gray"/>
-                        <TextBlock Text="{Binding YearlyPrognosisDisplay}" FontSize="20" FontWeight="Bold"/>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Select Month" FontSize="11" Foreground="Gray" Margin="0,0,0,3"/>
+                            <ComboBox   ItemsSource="{Binding PrognosisMonths}"
+                                        SelectedItem="{Binding SelectedPrognosisMonth}"
+                                        Width="140" Height="30"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <StackPanel Grid.Row="2" VerticalAlignment="Top">
+                        <Border Style="{StaticResource InfoCard}">
+                            <StackPanel>
+                                <TextBlock Text="Estimated Year End Result" FontSize="12" Foreground="Gray"/>
+                                <TextBlock Text="{Binding YearlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource InfoCard}" Margin="0,15,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Estimated Monthly Average" FontSize="12" Foreground="Gray"/>
+                                <TextBlock Text="{Binding MonthlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
                 </Grid>
             </TabItem>
+
         </TabControl>
     </Grid>
 </Window>
