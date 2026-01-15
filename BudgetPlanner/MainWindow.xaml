@@ -17,7 +17,7 @@
 
                     <StackPanel>
                         <TextBlock Text="My Budget Planner" FontSize="22" Margin="10"/>
-
+                        <TextBlock Text="Current Net Balance" FontSize="11" Margin="10 5 10 3" FontStyle="Italic"/>
                         <TextBlock Text="{Binding BalanceDisplay}" Margin="10 0 0 3" Width="150" FontSize="18" FontWeight="Bold" HorizontalAlignment="Left">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
