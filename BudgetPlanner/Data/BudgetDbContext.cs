@@ -17,6 +17,7 @@ namespace BudgetPlanner.Data
         {
         }
 
+        //Seed initial data for testing
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DatabaseTransaction>().HasData(
