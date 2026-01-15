@@ -10,18 +10,36 @@ namespace BudgetPlanner.ViewModels
     {
         private readonly IBudgetRepo _budgetRepo;
         public ObservableCollection<DatabaseTransaction> Transactions { get; set; }
+        public ObservableCollection<string> PrognosisMonths { get; set; } = new ObservableCollection<string>
+        {
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        };
+
         public RelayCommand AddTransactionCommand { get; }
         public List<string> PrognosisYears { get; } = new List<string>();
+
+        private string _selectedPrognosisMonth;
         private string _selectedPrognosisYear;
+
+        public string SelectedPrognosisMonth
+        {
+            get => _selectedPrognosisMonth;
+            set
+            {
+                _selectedPrognosisMonth = value;
+                OnPropertyChanged(nameof(SelectedPrognosisMonth));
+                CalculatePrognosis();
+            }
+        }
         public string SelectedPrognosisYear
         {
             get => _selectedPrognosisYear;
             set
             {
-                if(SetProperty(ref _selectedPrognosisYear, value))
-                {
-                    CalculatePrognosis();
-                }
+                _selectedPrognosisYear = value;
+                OnPropertyChanged(nameof(SelectedPrognosisYear));
+                CalculatePrognosis();
             }
         }
 
@@ -40,6 +58,11 @@ namespace BudgetPlanner.ViewModels
             Transactions = new ObservableCollection<DatabaseTransaction>();
             AddTransactionCommand = new RelayCommand(x => ExecuteOpenAddWindow());
             ClearDateCommand = new RelayCommand(x => SelectedDate = null);
+
+            SelectedPrognosisYear = DateTime.Now.Year.ToString();
+            SelectedPrognosisMonth = PrognosisMonths[DateTime.Now.Month - 1];
+
+            CalculatePrognosis();
         }
 
         private void ExecuteOpenAddWindow()
@@ -66,6 +89,7 @@ namespace BudgetPlanner.ViewModels
             }
 
             UpdateDashboard();
+            CalculatePrognosis();
         }
 
         public async Task AddTransaction(object? parameter)
@@ -185,22 +209,30 @@ namespace BudgetPlanner.ViewModels
         //Prognosis Tab specifics
         private decimal _yearlyPrognosis;
         public string YearlyPrognosisDisplay => $"{_yearlyPrognosis:N2} kr";
+        private decimal _monthlyPrognosis;
+        public string MonthlyPrognosisDisplay => $"{_monthlyPrognosis:N2} kr";
 
         private void CalculatePrognosis()
         {
-            if (Transactions == null) return;
-
-            decimal totalYearlyBalance = 0;
+            if (Transactions == null || string.IsNullOrEmpty(SelectedPrognosisYear)) return;
             if (!int.TryParse(SelectedPrognosisYear, out int targetYear)) return;
+
+            decimal yearTotal = 0;
+            decimal monthTotal = 0;
+
+            int currentYear = DateTime.Now.Year;
+            int currentMonth = DateTime.Now.Month;
+
+            //Find index of selected month where 1 is January
+            int targetMonth = PrognosisMonths.IndexOf(SelectedPrognosisMonth) +1; 
 
             foreach (var t in Transactions)
             {
-                decimal annualAmount = 0;
-
                 string recurrenceText = t.Recurrence.ToString().ToLower().Trim();
 
-                //Map string DB to times per year
-                switch(recurrenceText)
+                //Calculate yearly balance
+                decimal annualAmount = 0;
+                switch (recurrenceText)
                 {
                     case "monthly":
                         annualAmount = t.Amount * 12;
@@ -209,18 +241,43 @@ namespace BudgetPlanner.ViewModels
                         annualAmount = t.Amount;
                         break;
                     default:
-                        //OneTime transactions: Did it happen this year
-                        if (t.Date.Year == targetYear)
+                        //OneTime transactions: Prognosis THIS year includes one time transactions
+                        if (targetYear == currentYear && t.Date.Year == currentYear)
                             annualAmount = t.Amount;
                         break;
 
                 }
-                if (t.IsIncome) totalYearlyBalance += annualAmount;
-                else totalYearlyBalance -= annualAmount;
+                if (t.IsIncome) yearTotal += annualAmount; else yearTotal -= annualAmount;
+
+                //Calculate monthly balance
+                decimal monthlyAmount = 0;
+
+                switch (recurrenceText)
+                {
+                    case "monthly":
+                        monthlyAmount = t.Amount;
+                        break;
+                    //Only include if the yearly transaction happens this month
+                    case "yearly":
+                        if (t.Date.Month == targetMonth) monthlyAmount = t.Amount;
+                        break;
+                    default:
+                        //OneTime transactions: Prognosis THIS year includes one time transactions
+                        if (targetYear == currentYear && targetMonth == currentMonth &&
+                            t.Date.Year == currentYear && t.Date.Month == currentMonth)
+                        {
+                            monthlyAmount = t.Amount;
+                        }
+                        break;
+                }
+                if (t.IsIncome) monthTotal += monthlyAmount; else monthTotal -= monthlyAmount;
             }
-            _yearlyPrognosis = totalYearlyBalance;
+
+            _yearlyPrognosis = yearTotal;
+            _monthlyPrognosis = monthTotal;
+
             OnPropertyChanged(nameof(YearlyPrognosisDisplay));
-            OnPropertyChanged(nameof(IsPositiveBalance));
+            OnPropertyChanged(nameof(MonthlyPrognosisDisplay));
         }
     }
 }
