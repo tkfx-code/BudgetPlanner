@@ -5,9 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BudgetPlanner.Views"
         mc:Ignorable="d"
-        Title="AddTransactionWindow" Height="450" Width="400">
-    <Grid>
-        <StackPanel Margin="10">
+        Title="AddTransactionWindow" Height="450" Width="400"
+        WindowStartupLocation="CenterOwner"
+        Background="White">
+        
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="New Transaction"
+                     Style="{StaticResource HeaderTitle}"
+                     Margin="0 0 0 20"/>
+        <StackPanel Grid.Row="1">
             <TextBlock Text="Amount:" FontWeight="Bold"/>
             <TextBox Text="{Binding Amount, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:N2}, ValidatesOnExceptions=True}" />
 
@@ -35,13 +45,14 @@
             <RadioButton Content="Yearly"
                          IsChecked="{Binding IsYearly}"
                          Margin="0 0 10 0" FontStyle="Italic" FontSize="11"/>
-            <Button Margin="3 30 3 0"
-                    Content="Add Transaction" 
-                    FontSize="12" FontWeight="Bold"
+        </StackPanel>
+        <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
+            <Button Content="Save" 
                     Command="{Binding SaveCommand}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    Style="{StaticResource PrimaryButton}"
                     HorizontalAlignment="Center"
-                    Width="150"/>
+                    Width="100"/>
         </StackPanel>
     </Grid>
 </Window>
