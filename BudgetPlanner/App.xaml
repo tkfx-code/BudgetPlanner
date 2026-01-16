@@ -62,5 +62,26 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <!--Data Grid Column Center Style-->
+        <Style x:Key="DataGridColumnCenter" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!--Data Cell Grid Center Style-->
+        <Style TargetType="DataGridCell">
+            <Style.Setters>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Grid Background="{TemplateBinding Background}">
+                                <ContentPresenter VerticalAlignment="Center"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+        </Style>
     </Application.Resources>
 </Application>

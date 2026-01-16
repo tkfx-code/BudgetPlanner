@@ -164,13 +164,15 @@
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <Button Content="Delete" 
+                                                Width="60"
                                                 Command="{Binding DataContext.DeleteTransactionCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                 CommandParameter="{Binding}"
                                                 Background="Transparent" 
                                                 BorderBrush="DarkRed" 
                                                 Foreground="DarkRed" 
                                                 FontSize="10" 
-                                                Padding="5,2"
+                                                FontWeight="SemiBold"
+                                                Padding="3,2"
                                                 Cursor="Hand"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
