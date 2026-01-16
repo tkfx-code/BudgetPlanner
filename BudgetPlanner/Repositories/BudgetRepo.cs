@@ -35,7 +35,11 @@ namespace BudgetPlanner.Repositories
 
         public IEnumerable<DatabaseTransaction> GetAllTransactions()
         {
-            return _context.Transactions.ToList();
+            //return _context.Transactions.ToList();
+            using (var db = new BudgetDbContext())
+            {
+                return db.Transactions.ToList();
+            }
         }
 
         //Update an existing transaction and save changes to the database
@@ -43,7 +47,8 @@ namespace BudgetPlanner.Repositories
         {
             using (var db = new BudgetDbContext())
             {
-                db.Transactions.Update(transaction);
+                db.Transactions.Attach(transaction);
+                db.Entry(transaction).State = EntityState.Modified;
                 db.SaveChanges();
             }
         }

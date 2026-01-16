@@ -19,6 +19,7 @@ namespace BudgetPlanner.Data
         }
         public BudgetDbContext()
         {
+            Database.EnsureCreated();
         }
 
         //Earlier

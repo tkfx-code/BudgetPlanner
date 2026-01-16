@@ -33,11 +33,15 @@ namespace BudgetPlanner
             //Wait for the edit to complete before saving
             if (e.EditAction == DataGridEditAction.Commit)
             {
-                var editedTransaction = e.Row.Item as Models.DatabaseTransaction;
-                if(editedTransaction != null)
+                //Use Dispatcher to wait for the edit to complete
+                Dispatcher.BeginInvoke(new Action(() =>
                 {
-                    viewModel.OnTransactionEdited(editedTransaction);
-                }
+                    var editedTransaction = e.Row.Item as Models.DatabaseTransaction;
+                    if (editedTransaction != null)
+                    {
+                        viewModel.OnTransactionEdited(editedTransaction);
+                    }
+                }), System.Windows.Threading.DispatcherPriority.Background);
             }
         }
 
