@@ -11,6 +11,7 @@ namespace BudgetPlanner.Repositories
         public BudgetRepo()
         {
             _context = new BudgetDbContext();
+            _context.Database.EnsureCreated();
         }
 
         public void AddTransaction(DatabaseTransaction transaction)

@@ -65,13 +65,27 @@
                                 </DataGridTemplateColumn.CellTemplate>
                                 <DataGridTemplateColumn.CellEditingTemplate>
                                     <DataTemplate>
-                                        <DatePicker SelectedDate="{Binding Date, UpdateSourceTrigger=PropertyChanged}" 
+                                        <DatePicker SelectedDate="{Binding Date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                                    IsTodayHighlighted="True"
                                                     BorderThickness="0"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellEditingTemplate>
-                            </DataGridTemplateColumn>  
-                            <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="*"/>
-                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*"/>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Category" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding CategoryName}" VerticalAlignment="Center" Margin="5"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding DataContext.CategoryFilters, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                  SelectedItem="{Binding CategoryName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  IsEditable="False"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description, Mode=TwoWay}" Width="2*"/>
 
                             <DataGridTemplateColumn Header="Repeats" Width="100">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -89,6 +103,17 @@
                                         </TextBlock>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
+
+                                <DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedItem="{Binding Recurrence, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  IsEditable="False">
+                                            <ComboBoxItem Content="OneTime"/>
+                                            <ComboBoxItem Content="Monthly"/>
+                                            <ComboBoxItem Content="Yearly"/>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>
                             </DataGridTemplateColumn>
 
                             <DataGridTemplateColumn Header="Amount" Width="130">
@@ -101,7 +126,7 @@
                                                         <Setter Property="Text" Value="- "/>
                                                         <Setter Property="Foreground" Value="DarkRed"/>
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsIncome}" Value="True">
+                                                            <DataTrigger Binding="{Binding IsIncome, Mode=TwoWay}" Value="True">
                                                                 <Setter Property="Text" Value="+ "/>
                                                                 <Setter Property="Foreground" Value="DarkGreen"/>
                                                             </DataTrigger>
@@ -109,13 +134,13 @@
                                                     </Style>
                                                 </TextBlock.Style>
                                             </TextBlock>
-                                            <TextBlock Text="{Binding Amount, StringFormat={}{0:N2} kr}" 
+                                            <TextBlock Text="{Binding Amount, Mode=TwoWay, StringFormat={}{0:N2} kr}" 
                                                        FontWeight="Bold" VerticalAlignment="Center">
                                                 <TextBlock.Style>
                                                     <Style TargetType="TextBlock">
                                                         <Setter Property="Foreground" Value="DarkRed"/>
                                                         <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding IsIncome}" Value="True">
+                                                            <DataTrigger Binding="{Binding IsIncome, Mode=TwoWay}" Value="True">
                                                                 <Setter Property="Foreground" Value="DarkGreen"/>
                                                             </DataTrigger>
                                                         </Style.Triggers>
