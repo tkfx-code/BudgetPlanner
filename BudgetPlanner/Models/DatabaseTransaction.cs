@@ -15,6 +15,8 @@ namespace BudgetPlanner.Models
         public bool IsIncome { get; set; }
         public TransactionRecurrence Recurrence { get; set; }
         public int? Month { get; set; }
+        //For add on assignment: VAB/Sick leave should not be editable 
+        public bool IsLocked { get; set; } = false;
     }
 
     public enum TransactionRecurrence

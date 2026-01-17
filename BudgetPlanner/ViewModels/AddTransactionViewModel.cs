@@ -70,7 +70,8 @@ namespace BudgetPlanner.ViewModels
                 IsIncome = this.IsIncome,
                 Recurrence = this.Recurrence,
                 CategoryName = this.SelectedCategoryName ?? "Other",
-                Month = this.Recurrence == TransactionRecurrence.Yearly ? Date.Month : null
+                Month = this.Recurrence == TransactionRecurrence.Yearly ? Date.Month : null,
+                IsLocked = false
             };
 
             //Save to database

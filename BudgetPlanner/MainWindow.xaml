@@ -55,6 +55,17 @@
                             HorizontalGridLinesBrush="#EEEEEE"
                             Background="White" 
                             RowHeight="35">
+                        <!--Sickness & VAB not editable rows-->
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLocked}" Value="True">
+                                        <Setter Property="IsEnabled" Value="False"/>
+                                        <Setter Property="Background" Value="LightGray"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="Date" Width="120">
                                 <DataGridTemplateColumn.CellTemplate>

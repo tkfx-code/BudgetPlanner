@@ -207,7 +207,8 @@ namespace BudgetPlanner.ViewModels
         //Apply filter to Transactions
         public List<string> CategoryFilters { get; } = new List<string>
         {
-            "All", "Fun", "Groceries", "Healthcare", "Income", "Insurance", "Rent", "Restaurant & Cafe", "Savings", "Services", "Transport"
+            //Added Sickness and VAB here to show up in filtration dropdown
+            "All", "Fun", "Groceries", "Healthcare", "Income", "Insurance", "Rent", "Restaurant & Cafe", "Savings", "Services", "Sickness", "Transport", "VAB"
         };
         private string _selectedCategoryFilter = "All";
         public string SelectedCategoryFilter
