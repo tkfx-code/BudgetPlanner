@@ -190,11 +190,21 @@
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-
-                    <Button Grid.Row="3" Content="+ Add Transaction" 
-                            Command="{Binding AddTransactionCommand}" 
-                            Style="{StaticResource PrimaryButton}"
-                            HorizontalAlignment="Left" Width="180" Height="40" Margin="0,15,0,0"/>
+                    <Grid Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="+ Add Transaction" 
+                        Command="{Binding AddTransactionCommand}" 
+                        Style="{StaticResource PrimaryButton}"
+                        Width="180" Height="40" Margin="0,15,0,0"/>
+                    <Button Grid.Column="1" Content="Register Absence"
+                        Command="{Binding AddAbsenceCommand}"
+                        Style="{StaticResource PrimaryButton}"
+                        Background="#3d81ad"
+                        Width="180" Height="40" Margin="0,15,0,0"/>
+                    </Grid>
                 </Grid>
             </TabItem>
 
@@ -234,6 +244,10 @@
                             <StackPanel>
                                 <TextBlock Text="Estimated Year End Result" FontSize="12" Foreground="Gray"/>
                                 <TextBlock Text="{Binding YearlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
+
+                                <TextBlock Text="{Binding YearlyAbsenceImpact, StringFormat='Where {0:2} is due to VAB/Sickness'}"
+                                           FontSize="12" Foreground="Gray" FontStyle="Italic"
+                                           Visibility="{Binding HasYearlyAbsence, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </StackPanel>
                         </Border>
 
@@ -241,6 +255,10 @@
                             <StackPanel>
                                 <TextBlock Text="Estimated Monthly Average" FontSize="12" Foreground="Gray"/>
                                 <TextBlock Text="{Binding MonthlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
+
+                                <TextBlock Text="{Binding MonthlyAbsenceImpact, StringFormat='Where {0:2} is due to VAB/Sickness'}"
+                                           FontSize="12" Foreground="Gray" FontStyle="Italic"
+                                           Visibility="{Binding HasMonthlyAbsence, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </StackPanel>
                         </Border>
                     </StackPanel>

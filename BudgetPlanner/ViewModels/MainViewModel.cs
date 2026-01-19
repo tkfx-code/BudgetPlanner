@@ -18,6 +18,7 @@ namespace BudgetPlanner.ViewModels
         };
 
         public RelayCommand AddTransactionCommand { get; }
+        public RelayCommand AddAbsenceCommand { get; }
         public RelayCommand DeleteTransactionCommand { get; }
         public List<string> PrognosisYears { get; } = new List<string>();
 
@@ -59,6 +60,7 @@ namespace BudgetPlanner.ViewModels
 
             Transactions = new ObservableCollection<DatabaseTransaction>();
             AddTransactionCommand = new RelayCommand(x => ExecuteOpenAddWindow());
+            AddAbsenceCommand = new RelayCommand(x => ExecuteOpenAbsenceWindow());
             DeleteTransactionCommand = new RelayCommand(x => ExecuteDeleteTransaction(x));
             ClearDateCommand = new RelayCommand(x => SelectedDate = null);
 
@@ -69,14 +71,25 @@ namespace BudgetPlanner.ViewModels
         }
 
         private void ExecuteOpenAddWindow()
-        { 
+        {
             var addWindow = new BudgetPlanner.Views.AddTransactionWindow();
             var addViewModel = new AddTransactionViewModel(_budgetRepo);
             addWindow.DataContext = addViewModel;
             if (addWindow.ShowDialog() == true)
             {
-              // Refresh transactions after adding a new one
-              _ = LoadAsync();
+                // Refresh transactions after adding a new one
+                _ = LoadAsync();
+            }
+        }
+        private void ExecuteOpenAbsenceWindow()
+        {
+            var absenceWindow = new BudgetPlanner.Views.AbsenceWindow();
+            var absenceViewModel = new AbsenceViewModel(_budgetRepo);
+            absenceWindow.DataContext = absenceViewModel;
+            if (absenceWindow.ShowDialog() == true)
+            {
+                // Refresh transactions after adding a new one
+                _ = LoadAsync();
             }
         }
 
@@ -252,6 +265,16 @@ namespace BudgetPlanner.ViewModels
             TotalBalance = FilteredTransactions.Sum(t => t.IsIncome ? t.Amount : -t.Amount);
         }
 
+        private decimal _monthlyAbsenceImpact;
+        public decimal MonthlyAbsenceImpact { get => _monthlyAbsenceImpact; set => SetProperty(ref _monthlyAbsenceImpact, value); }
+
+        private decimal _yearlyAbsenceImpact;
+        public decimal YearlyAbsenceImpact { get => _yearlyAbsenceImpact; set => SetProperty(ref _yearlyAbsenceImpact, value); }
+
+        //Hide row for VAB/Sick if not applicable
+        public bool HasMonthlyAbsence => _monthlyAbsenceImpact != 0;
+        public bool HasYearlyAbsence => _yearlyAbsenceImpact != 0;
+
         //Prognosis Tab specifics
         private decimal _yearlyPrognosis;
         public string YearlyPrognosisDisplay => $"{_yearlyPrognosis:N2} kr";
@@ -263,6 +286,8 @@ namespace BudgetPlanner.ViewModels
             if (Transactions == null || string.IsNullOrEmpty(SelectedPrognosisYear)) return;
             if (!int.TryParse(SelectedPrognosisYear, out int targetYear)) return;
 
+            MonthlyAbsenceImpact = 0;
+            YearlyAbsenceImpact = 0;
             decimal yearTotal = 0;
             decimal monthTotal = 0;
 
@@ -295,6 +320,12 @@ namespace BudgetPlanner.ViewModels
                 }
                 if (t.IsIncome) yearTotal += annualAmount; else yearTotal -= annualAmount;
 
+                //Annual VAB/Sickness
+                if(t.CategoryName == "Sickness" || t.CategoryName == "VAB")
+                {
+                    YearlyAbsenceImpact += annualAmount;
+                }
+
                 //Calculate monthly balance
                 decimal monthlyAmount = 0;
 
@@ -317,6 +348,12 @@ namespace BudgetPlanner.ViewModels
                         break;
                 }
                 if (t.IsIncome) monthTotal += monthlyAmount; else monthTotal -= monthlyAmount;
+
+                //Monthly VAB/Sickness
+                if (t.CategoryName == "Sickness" || t.CategoryName == "VAB")
+                {
+                    MonthlyAbsenceImpact += monthlyAmount;
+                }
             }
 
             _yearlyPrognosis = yearTotal;
