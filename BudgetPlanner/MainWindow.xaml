@@ -220,18 +220,18 @@
 
                     <Grid Grid.Row="1" Margin="0,10,0,25">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+                        <StackPanel Grid.Column="0" Margin="0,0,20,0" HorizontalAlignment="Left">
                             <TextBlock Text="Select Year" FontSize="11" Foreground="Gray" Margin="0,0,0,3"/>
                             <ComboBox ItemsSource="{Binding PrognosisYears}" 
                                       SelectedItem="{Binding SelectedPrognosisYear}" 
                                       Width="120" Height="30"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1">
+                        <StackPanel Grid.Column="1" Margin="15,0,20,0" HorizontalAlignment="Left">
                             <TextBlock Text="Select Month" FontSize="11" Foreground="Gray" Margin="0,0,0,3"/>
                             <ComboBox   ItemsSource="{Binding PrognosisMonths}"
                                         SelectedItem="{Binding SelectedPrognosisMonth}"
@@ -239,32 +239,37 @@
                         </StackPanel>
                     </Grid>
 
-                    <StackPanel Grid.Row="2" VerticalAlignment="Top">
-                        <Border Style="{StaticResource InfoCard}">
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource InfoCard}" VerticalAlignment="Top" Margin="0,15,0,15">
                             <StackPanel>
                                 <TextBlock Text="Estimated Year End Result" FontSize="12" Foreground="Gray"/>
                                 <TextBlock Text="{Binding YearlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
 
-                                <TextBlock Text="{Binding YearlyAbsenceImpact, StringFormat='Where {0:2} is due to VAB/Sickness'}"
+                                <TextBlock Text="{Binding YearlyAbsenceImpact, StringFormat='Where {0:N2} kr is due to VAB/Sickness'}"
                                            FontSize="12" Foreground="Gray" FontStyle="Italic"
                                            Visibility="{Binding HasYearlyAbsence, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </StackPanel>
                         </Border>
 
-                        <Border Style="{StaticResource InfoCard}" Margin="0,15,0,0">
+
+                        <Border Grid.Column="1" Style="{StaticResource InfoCard}" VerticalAlignment="Top" Margin="15,15,0,0">
                             <StackPanel>
                                 <TextBlock Text="Estimated Monthly Average" FontSize="12" Foreground="Gray"/>
                                 <TextBlock Text="{Binding MonthlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
 
-                                <TextBlock Text="{Binding MonthlyAbsenceImpact, StringFormat='Where {0:2} is due to VAB/Sickness'}"
+                                <TextBlock Text="{Binding MonthlyAbsenceImpact, StringFormat='Where {0:N2} kr is due to VAB/Sickness'}"
                                            FontSize="12" Foreground="Gray" FontStyle="Italic"
                                            Visibility="{Binding HasMonthlyAbsence, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                             </StackPanel>
                         </Border>
-                    </StackPanel>
+                    </Grid>
                 </Grid>
             </TabItem>
-
         </TabControl>
     </Grid>
 </Window>

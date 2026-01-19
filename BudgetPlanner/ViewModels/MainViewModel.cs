@@ -313,7 +313,7 @@ namespace BudgetPlanner.ViewModels
                         break;
                     default:
                         //OneTime transactions: Prognosis THIS year includes one time transactions
-                        if (targetYear == currentYear && t.Date.Year == currentYear)
+                        if (t.Date.Year == targetYear)
                             annualAmount = t.Amount;
                         break;
 
@@ -340,8 +340,7 @@ namespace BudgetPlanner.ViewModels
                         break;
                     default:
                         //OneTime transactions: Prognosis THIS year includes one time transactions
-                        if (targetYear == currentYear && targetMonth == currentMonth &&
-                            t.Date.Year == currentYear && t.Date.Month == currentMonth)
+                        if (t.Date.Year == targetYear && t.Date.Month == targetMonth)
                         {
                             monthlyAmount = t.Amount;
                         }
@@ -361,6 +360,13 @@ namespace BudgetPlanner.ViewModels
 
             OnPropertyChanged(nameof(YearlyPrognosisDisplay));
             OnPropertyChanged(nameof(MonthlyPrognosisDisplay));
+
+            //Force update Absence as well to update UI
+            OnPropertyChanged(nameof(HasYearlyAbsence));
+            OnPropertyChanged(nameof(HasMonthlyAbsence));
+
+            OnPropertyChanged(nameof(YearlyAbsenceImpact));
+            OnPropertyChanged(nameof(MonthlyAbsenceImpact));
         }
     }
 }
