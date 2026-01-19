@@ -245,7 +245,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Border Grid.Column="0" Style="{StaticResource InfoCard}" VerticalAlignment="Top" Margin="0,15,0,15">
+                        <Border Grid.Column="0" Style="{StaticResource InfoCard}" VerticalAlignment="Top" Margin="0,15,0,15" MinHeight="100">
                             <StackPanel>
                                 <TextBlock Text="Estimated Year End Result" FontSize="12" Foreground="Gray"/>
                                 <TextBlock Text="{Binding YearlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
@@ -257,7 +257,7 @@
                         </Border>
 
 
-                        <Border Grid.Column="1" Style="{StaticResource InfoCard}" VerticalAlignment="Top" Margin="15,15,0,0">
+                        <Border Grid.Column="1" Style="{StaticResource InfoCard}" VerticalAlignment="Top" Margin="15,15,0,0" MinHeight="100">
                             <StackPanel>
                                 <TextBlock Text="Estimated Monthly Average" FontSize="12" Foreground="Gray"/>
                                 <TextBlock Text="{Binding MonthlyPrognosisDisplay}" Style="{StaticResource BalanceValue}"/>
