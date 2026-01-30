@@ -14,6 +14,26 @@ namespace BudgetPlanner.ViewModels
         private bool _isSickness = true;
         private DateTime _startDate = DateTime.Now;
         private DateTime _endDate = DateTime.Now;
+        //isIncome
+        private bool _isIncome;
+        public bool IsIncome { get => _isIncome; set => SetProperty(ref _isIncome, value); }
+
+        //Description
+        private string _description;
+        public string Description { get => _description; set => SetProperty(ref _description, value); }
+
+        //Categories
+        public List<string> CategoryOptions { get; set; } = new List<string> {
+            "Sickness", "VAB" };
+        private string _selectedCategoryName;
+        public string SelectedCategoryName { get => _selectedCategoryName; set => SetProperty(ref _selectedCategoryName, value); }
+
+        //Recurrence
+        private TransactionRecurrence _recurrence;
+
+        //isLocked
+        private bool _isLocked;
+        public bool IsLocked { get => _isLocked; set => SetProperty(ref _isLocked, value); }
 
         public AbsenceViewModel(IBudgetRepo budgetRepo)
         {
@@ -71,27 +91,6 @@ namespace BudgetPlanner.ViewModels
             get => _endDate;
             set => SetProperty(ref _endDate, value);
         }
-
-        //isIncome
-        private bool _isIncome;
-        public bool IsIncome { get => _isIncome; set => SetProperty(ref _isIncome, value); }
-
-        //Description
-        private string _description;
-        public string Description { get => _description; set => SetProperty(ref _description, value); }
-
-        //Categories
-        public List<string> CategoryOptions { get; set; } = new List<string> {
-            "Sickness", "VAB" };
-        private string _selectedCategoryName;
-        public string SelectedCategoryName { get => _selectedCategoryName; set => SetProperty(ref _selectedCategoryName, value); }
-
-        //Recurrence
-        private TransactionRecurrence _recurrence;
-
-        //isLocked
-        private bool _isLocked;
-        public bool IsLocked { get => _isLocked; set => SetProperty(ref _isLocked, value); }
 
         public bool IsSickness
         {

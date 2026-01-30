@@ -2,7 +2,6 @@
 using BudgetPlanner.Models;
 using System.Collections.ObjectModel;
 using BudgetPlanner.Repositories;
-using System.Linq;
 using System.Windows;
 
 namespace BudgetPlanner.ViewModels
@@ -11,6 +10,8 @@ namespace BudgetPlanner.ViewModels
     {
         private readonly IBudgetRepo _budgetRepo;
         public ObservableCollection<DatabaseTransaction> Transactions { get; set; }
+
+        private ObservableCollection<DatabaseTransaction> _filteredTransactions;
         public ObservableCollection<string> PrognosisMonths { get; set; } = new ObservableCollection<string>
         {
             "January", "February", "March", "April", "May", "June",
@@ -20,10 +21,38 @@ namespace BudgetPlanner.ViewModels
         public RelayCommand AddTransactionCommand { get; }
         public RelayCommand AddAbsenceCommand { get; }
         public RelayCommand DeleteTransactionCommand { get; }
+        public RelayCommand ClearDateCommand { get; }
         public List<string> PrognosisYears { get; } = new List<string>();
+        
+        //Display properties for BalanceDisplay
+        public string BalanceDisplay => TotalBalance > 0 ? $"+{TotalBalance:N2} kr" : $"{TotalBalance:N2} kr";
+        public bool IsPositiveBalance => TotalBalance >= 0;
+
+        private string _filterText;
+        private DateTime? _selectedDate;
+        private decimal _totalBalance;
 
         private string _selectedPrognosisMonth;
         private string _selectedPrognosisYear;
+
+        private decimal _monthlyAbsenceImpact;
+        private decimal _yearlyAbsenceImpact;
+        public decimal MonthlyAbsenceImpact { get => _monthlyAbsenceImpact; set => SetProperty(ref _monthlyAbsenceImpact, value); }
+        public decimal YearlyAbsenceImpact { get => _yearlyAbsenceImpact; set => SetProperty(ref _yearlyAbsenceImpact, value); }
+
+
+
+
+
+        //Hide row for VAB/Sick if not applicable
+        public bool HasMonthlyAbsence => _monthlyAbsenceImpact != 0;
+        public bool HasYearlyAbsence => _yearlyAbsenceImpact != 0;
+
+        //Prognosis Tab  
+        private decimal _yearlyPrognosis;
+        private decimal _monthlyPrognosis;
+        public string YearlyPrognosisDisplay => $"{_yearlyPrognosis:N2} kr";
+        public string MonthlyPrognosisDisplay => $"{_monthlyPrognosis:N2} kr";
 
         public string SelectedPrognosisMonth
         {
@@ -144,7 +173,7 @@ namespace BudgetPlanner.ViewModels
             }
         }
 
-        //Call when cell change is done in DataGrid
+        //Call for any change done in DataGrid
         public void OnTransactionEdited(DatabaseTransaction transaction)
         {
             if (transaction != null)
@@ -154,10 +183,6 @@ namespace BudgetPlanner.ViewModels
                 CalculatePrognosis();
             }
         }
-
-        private string _filterText;
-        private decimal _totalBalance;
-        private ObservableCollection<DatabaseTransaction> _filteredTransactions;
 
         public string FilterText
         {
@@ -190,7 +215,6 @@ namespace BudgetPlanner.ViewModels
         }
 
         //Filter by date
-        private DateTime? _selectedDate;
         public DateTime? SelectedDate
         {
             get => _selectedDate;
@@ -202,13 +226,6 @@ namespace BudgetPlanner.ViewModels
                 }
             }
         }
-        //Clear date
-        public RelayCommand ClearDateCommand { get; }
-
-
-        //Display properties for positive BalanceDisplay
-        public string BalanceDisplay => TotalBalance > 0 ? $"+{TotalBalance:N2} kr" : $"{TotalBalance:N2} kr";
-        public bool IsPositiveBalance => TotalBalance >= 0;
 
         //Filter and calculate totals
         private void UpdateDashboard()
@@ -264,22 +281,6 @@ namespace BudgetPlanner.ViewModels
             //Calculate whats filtered in the list
             TotalBalance = FilteredTransactions.Sum(t => t.IsIncome ? t.Amount : -t.Amount);
         }
-
-        private decimal _monthlyAbsenceImpact;
-        public decimal MonthlyAbsenceImpact { get => _monthlyAbsenceImpact; set => SetProperty(ref _monthlyAbsenceImpact, value); }
-
-        private decimal _yearlyAbsenceImpact;
-        public decimal YearlyAbsenceImpact { get => _yearlyAbsenceImpact; set => SetProperty(ref _yearlyAbsenceImpact, value); }
-
-        //Hide row for VAB/Sick if not applicable
-        public bool HasMonthlyAbsence => _monthlyAbsenceImpact != 0;
-        public bool HasYearlyAbsence => _yearlyAbsenceImpact != 0;
-
-        //Prognosis Tab specifics
-        private decimal _yearlyPrognosis;
-        public string YearlyPrognosisDisplay => $"{_yearlyPrognosis:N2} kr";
-        private decimal _monthlyPrognosis;
-        public string MonthlyPrognosisDisplay => $"{_monthlyPrognosis:N2} kr";
 
         private void CalculatePrognosis()
         {

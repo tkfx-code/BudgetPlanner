@@ -12,9 +12,6 @@ using System.Windows.Shapes;
 
 namespace BudgetPlanner.Views
 {
-    /// <summary>
-    /// Interaction logic for AbsenceWindow.xaml
-    /// </summary>
     public partial class AbsenceWindow : Window
     {
         public AbsenceWindow()

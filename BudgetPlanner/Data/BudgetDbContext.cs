@@ -12,7 +12,7 @@ namespace BudgetPlanner.Data
         {
             optionsBuilder.UseSqlite("Data Source=budgetplanner.db");
 
-            //Testing more explicit path
+            //Testable with more explicit path
             //string dbPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "budgetplanner.db");
             //optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
@@ -22,8 +22,7 @@ namespace BudgetPlanner.Data
             Database.EnsureCreated();
         }
 
-        //Earlier
-        //Seed initial data for testing
+        //Earlier Seed data test
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<DatabaseTransaction>().HasData(

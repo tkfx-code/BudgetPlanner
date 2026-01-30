@@ -55,7 +55,7 @@
                             HorizontalGridLinesBrush="#EEEEEE"
                             Background="White" 
                             RowHeight="35">
-                        <!--Sickness & VAB not editable rows-->
+                        <!--Sickness & VAB non editable rows-->
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
