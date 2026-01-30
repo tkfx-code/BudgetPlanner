@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:BudgetPlanner"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!--Ability to hide row with VAB/Sickness in prognosis if not applicable-->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
         <!--Header Title Style-->
         <Style x:Key="HeaderTitle" TargetType="TextBlock">
